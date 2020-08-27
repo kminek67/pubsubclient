@@ -388,7 +388,7 @@ boolean PubSubClient::loop() {
             uint8_t llen;
             uint16_t len = readPacket(&llen);
             uint16_t msgId = 0;
-            uint8_t *payload;
+            //uint8_t *payload;
             if (len > 0) {
                 lastInActivity = t;
                 uint8_t type = this->buffer[0]&0xF0;
@@ -397,12 +397,14 @@ boolean PubSubClient::loop() {
                         uint16_t tl = (this->buffer[llen+1]<<8)+this->buffer[llen+2]; /* topic length in bytes */
                         memmove(this->buffer+llen+2,this->buffer+llen+3,tl); /* move topic inside buffer 1 byte to front */
                         this->buffer[llen+2+tl] = 0; /* end the topic as a 'C' string with \x00 */
-                        char *topic = (char*) this->buffer+llen+2;
+                        //char *topic = (char*) this->buffer+llen+2;
+                        topic = (char*) this->buffer+llen+2;
                         // msgId only present for QOS>0
                         if ((this->buffer[0]&0x06) == MQTTQOS1) {
                             msgId = (this->buffer[llen+3+tl]<<8)+this->buffer[llen+3+tl+1];
                             payload = this->buffer+llen+3+tl+2;
-                            callback(topic,payload,len-llen-3-tl-2);
+                            length = len-llen-3-tl-2;
+                            //callback(topic,payload,len-llen-3-tl-2);
 
                             this->buffer[0] = MQTTPUBACK;
                             this->buffer[1] = 2;
@@ -413,7 +415,8 @@ boolean PubSubClient::loop() {
 
                         } else {
                             payload = this->buffer+llen+3+tl;
-                            callback(topic,payload,len-llen-3-tl);
+                            length = len-llen-3-tl;
+                            //callback(topic,payload,len-llen-3-tl);
                         }
                     }
                 } else if (type == MQTTPINGREQ) {

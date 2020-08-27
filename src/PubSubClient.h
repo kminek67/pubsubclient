@@ -2,6 +2,10 @@
  PubSubClient.h - A simple client for MQTT.
   Nick O'Leary
   http://knolleary.net
+
+  Customizations:
+   * replacing callback capability by instant population of incoming message to class attributes
+
 */
 
 #ifndef PubSubClient_h
@@ -113,6 +117,11 @@ private:
    Stream* stream;
    int _state;
 public:
+
+   char* topic;
+   byte* payload;
+   unsigned int length;
+
    PubSubClient();
    PubSubClient(Client& client);
    PubSubClient(IPAddress, uint16_t, Client& client);
