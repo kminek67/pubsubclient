@@ -116,8 +116,10 @@ private:
    uint16_t port;
    Stream* stream;
    int _state;
+   /* Tschaban: If new message is received it's set to true */
+   boolean newMessage = false;
 public:
-
+   /* Tschaban: Added public attributues to store incoming message */
    char* topic;
    byte* payload;
    unsigned int length;
@@ -186,7 +188,8 @@ public:
    boolean loop();
    boolean connected();
    int state();
-
+   /* Tschaban: It runs loop and returns true if there is a message received. Message is stored in public attributes */ 
+   boolean listen();
 };
 
 
